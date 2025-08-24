@@ -36,14 +36,15 @@ export default function ContactsList({ search }: ContactsListProps) {
                 {isFetching && <div className="p-4 text-center text-gray-500">Loading...</div>}
 
                 {!isFetching && <div className="flex flex-col">
-                    {data?.contacts.map((contact, idx) => (
+                    {data?.contacts.map(contact => (
                         <ContactItem
+                            id={contact.id}
                             name={contact.name}
                             reference={''}
                             phoneNumber={contact.phone}
                             email={contact.email}
                             photo={contact.photo ?? ''}
-                            key={idx}
+                            key={contact.id}
                         />
                     ))}
                 </div>}

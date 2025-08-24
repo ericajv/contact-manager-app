@@ -16,7 +16,7 @@ export const Route = createFileRoute('/')({
 });
 
 function App() {
-    const [letter, setLetter] = useState('A');
+    const [letter, setLetter] = useState('');
     const [search, setSearch] = useState('');
 
     return (

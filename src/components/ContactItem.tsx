@@ -1,25 +1,37 @@
 import { useState } from 'react';
 import Modal from './common/Modal';
 import ContactModal from './ContactModal';
+import { deleteContact } from '@/api/contacts';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface ContactItemProps {
+    id: string;
     name: string;
     reference: string;
     phoneNumber: string;
     email: string;
     photo: string;
-    // openModalFn: () => void;
 }
 
 export default function ContactItem({
+    id,
     name,
     reference,
     phoneNumber,
     email,
     photo
-    // openModalFn
 }: ContactItemProps) {
     const [isModalOpen, setModalOpen] = useState(false);
+
+    const queryClient = useQueryClient();
+
+    async function handleDeleteContact(id: string) {
+        if (confirm('Você deseja excluir este contato?')) {
+            await deleteContact(id);
+            setModalOpen(false);
+            await queryClient.invalidateQueries({ queryKey: ['contacts-list'] });
+        }
+    }
 
     return (
         <div className="flex items-center py-[12px] px-[12px] border-b border-[#303030]">
@@ -58,18 +70,24 @@ export default function ContactItem({
                     </span>
                     <span className="text-[12px] font-semibold text-white">Editar</span>
                 </button>
-                <button className="w-[28px] h-[28px] border border-[#303030] rounded-[8px] flex items-center justify-center transition-colors hover:bg-[#ff4040]">
+                <button 
+                    className="w-[28px] h-[28px] border border-[#303030] rounded-[8px] flex items-center justify-center transition-colors hover:bg-[#ff4040]"
+                    onClick={() => handleDeleteContact(id)}
+                >
                     <span className="material-symbols-outlined text-[12px] text-white">delete</span>
                 </button>
             </div>
 
             <Modal isOpen={isModalOpen} onClose={() => setModalOpen(true)}>
                 <ContactModal
-                    name={email}
-                    reference={reference}
-                    phoneNumber={phoneNumber}
-                    email={email}
-                    photo={photo}
+                    contact={{
+                        name,
+                        // reference: '',
+                        phone: phoneNumber,
+                        email,
+                        photo
+                    }}
+                    contactId={id}
                     closeModalFn={() => setModalOpen(false)}
                 />
             </Modal>

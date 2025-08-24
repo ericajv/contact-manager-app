@@ -12,14 +12,14 @@ export default function Photo({ url }: PhotoProps) {
                     </span>
                 </div>
             )}
-            <button className="flex items-center px-2 py-2 border border-[#303030] rounded-sm hover:bg-[#252525] transition-colors">
+            {/* <button className="flex items-center px-2 py-2 border border-[#303030] rounded-sm hover:bg-[#252525] transition-colors">
                 <span className="material-symbols-outlined text-[#ffffff] text-xs mr-1">
                     {url ? 'upload' : 'add'}
                 </span>
                 <span className="text-[#ffffff] text-xs">
                     {url ? 'Substituir' : 'Adicionar foto'}
                 </span>
-            </button>
+            </button> */}
         </div>
     );
 }
