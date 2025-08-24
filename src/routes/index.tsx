@@ -2,10 +2,16 @@ import AlphabetIndex from '@/components/AlphabetIndex';
 import ContactsList from '@/components/ContactsList';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
-    component: App
+    component: App,
+    beforeLoad: () => {
+        const token = localStorage.getItem('@contactmanager.token');
+        if (!token) {
+            throw redirect({ to: '/login' });
+        }
+    }
 });
 
 function App() {

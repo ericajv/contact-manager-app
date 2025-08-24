@@ -1,6 +1,17 @@
+import { useAuth } from "@/hookes/useAuth";
+import { useNavigate } from "@tanstack/react-router";
+
 export type SidebarProps = { userEmail: string };
 
 export default function Sidebar({ userEmail }: SidebarProps) {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        logout();
+        navigate({ to: '/login' });
+    }
+
     return (
         <div className="w-[111px] flex flex-col items-center py-[40px] space-y-[222px]">
             {/* Logo */}
@@ -18,7 +29,10 @@ export default function Sidebar({ userEmail }: SidebarProps) {
                         settings
                     </span>
                 </button>
-                <button className="w-[48px] h-[48px] rounded-[16px] bg-[#1b1b1b] flex items-center justify-center transition-transform hover:scale-105 hover:bg-[#303030] group">
+                <button 
+                    className="w-[48px] h-[48px] rounded-[16px] bg-[#1b1b1b] flex items-center justify-center transition-transform hover:scale-105 hover:bg-[#303030] group"
+                    onClick={handleLogout}
+                >
                     <span className="material-symbols-outlined text-[20px] text-[#5e5e5e] group-hover:text-[#c4f120]">
                         logout
                     </span>

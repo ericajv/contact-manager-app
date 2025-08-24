@@ -1,11 +1,29 @@
 import Button from '@/components/common/Button';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { useAuth } from '@/hookes/useAuth';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/login')({
     component: App
 });
 
 function App() {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (email: string, password: string) => {
+        try {
+            await login(email, password);
+        } catch (error) {
+            alert(error);
+        }
+
+        navigate({ to: '/' });
+    };
+    
     return (
         <div className="flex h-screen w-full bg-black overflow-hidden">
             <div className="w-2/3 h-full relative">
@@ -38,6 +56,8 @@ function App() {
                             type="email"
                             placeholder="Digite seu e-mail"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -47,6 +67,8 @@ function App() {
                             type="password"
                             placeholder="Insira sua senha"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
                         />
                     </div>
 
@@ -56,6 +78,7 @@ function App() {
                             hoverColor="bg-lime-500"
                             textColor="text-black"
                             text="Acessar conta"
+                            onClickFn={async () => await handleLogin(email, password)}
                         />
                     </div>
                 </div>

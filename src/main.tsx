@@ -9,6 +9,7 @@ import { routeTree } from './routeTree.gen';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
+import { AuthProvider } from './hookes/useAuth.tsx';
 
 // Create a new router instance
 
@@ -37,9 +38,11 @@ if (rootElement && !rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <StrictMode>
-            <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-                <RouterProvider router={router} />
-            </TanStackQueryProvider.Provider>
+            <AuthProvider>
+                <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+                    <RouterProvider router={router} />
+                </TanStackQueryProvider.Provider>
+            </AuthProvider>
         </StrictMode>
     );
 }

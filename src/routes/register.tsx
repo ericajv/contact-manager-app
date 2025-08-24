@@ -1,11 +1,48 @@
 import Banner from '@/components/common/Banner';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { useAuth } from '@/hookes/useAuth';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/register')({
     component: App
 });
 
 function App() {
+    const { register } = useAuth();
+    const navigate = useNavigate();
+    
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState('');
+    const [hasError, setHasError] = useState(false);
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/;
+
+    const handlePasswordChange = (value: string) => {
+        setPassword(value);
+        setHasError(
+            password.length < 8
+            || !passwordRegex.exec(password)?.[0]
+            || password !== confirmPassword
+        );
+    };
+
+    const handlePasswordConfirmChange = (value: string) => {
+        setConfirmPassword(value);
+        setHasError(password !== confirmPassword);
+    };
+
+    const handleRegister = async (name: string, email: string, password: string) => {
+        try {
+            await register(name, email, password);
+        } catch (error) {
+            alert(error);
+        }
+
+        navigate({ to: '/' });
+    };
+
     return (
         <div className="flex h-screen w-full bg-black overflow-hidden">
             <Banner />
@@ -30,6 +67,8 @@ function App() {
                             type="text"
                             placeholder="Digite seu nome completo"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
                         />
                     </div>
 
@@ -39,6 +78,8 @@ function App() {
                             type="email"
                             placeholder="Digite seu e-mail"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -48,6 +89,8 @@ function App() {
                             type="password"
                             placeholder="Crie uma senha forte"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={password}
+                            onChange={e => handlePasswordChange(e.target.value)}
                         />
                     </div>
 
@@ -57,40 +100,45 @@ function App() {
                             type="password"
                             placeholder="Digite a senha novamente"
                             className="w-full bg-black border border-gray-700 rounded text-gray-300 p-2.5 focus:outline-none focus:border-lime-400 transition-colors"
+                            value={confirmPassword}
+                            onChange={e => handlePasswordConfirmChange(e.target.value)}
                         />
                     </div>
 
-                    <div className="mb-8">
-                        <div className="flex flex-row items-center space-x-[4px]">
+                    {hasError && <div className="mb-8">
+                        {password.length < 8 && <div className="flex flex-row items-center space-x-[4px]">
                             <div className="w-[16px] h-[16px] flex items-center justify-center">
                                 <span className="material-symbols-outlined text-[#e61e32] text-[18px]">
                                     cancel
                                 </span>
                             </div>
-                            <span className="block text-white">Pelo menos 8 caracteres</span>
-                        </div>
+                            <span className="block text-white">Senha deve conter pelo menos 8 caracteres</span>
+                        </div>}
 
-                        <div className="flex flex-row items-center space-x-[4px]">
+                        {!passwordRegex.exec(password)?.[0] && <div className="flex flex-row items-center space-x-[4px]">
                             <div className="w-[16px] h-[16px] flex items-center justify-center">
                                 <span className="material-symbols-outlined text-[#e61e32] text-[18px]">
                                     cancel
                                 </span>
                             </div>
-                            <span className="block text-white">Contém um número ou símbolo</span>
-                        </div>
+                            <span className="block text-white">Senha deve conter pelo menos uma letra, um número e um símbolo</span>
+                        </div>}
 
-                        <div className="flex flex-row items-center space-x-[4px]">
+                        {password !== confirmPassword && <div className="flex flex-row items-center space-x-[4px]">
                             <div className="w-[16px] h-[16px] flex items-center justify-center">
                                 <span className="material-symbols-outlined text-[#e61e32] text-[18px]">
                                     cancel
                                 </span>
                             </div>
                             <span className="block text-white">As senhas devem ser iguais</span>
-                        </div>
-                    </div>
+                        </div>}
+                    </div>}
 
                     <div className="flex justify-end">
-                        <button className="bg-lime-400 hover:bg-lime-500 text-black font-medium px-6 py-2.5 rounded transition-colors">
+                        <button 
+                            className="bg-lime-400 hover:bg-lime-500 text-black font-medium px-6 py-2.5 rounded transition-colors"
+                            onClick={async () => await handleRegister(name, email, password)}
+                        >
                             Criar conta
                         </button>
                     </div>
