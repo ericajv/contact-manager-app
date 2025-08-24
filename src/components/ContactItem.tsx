@@ -82,7 +82,7 @@ export default function ContactItem({
                 <ContactModal
                     contact={{
                         name,
-                        // reference: '',
+                        reference,
                         phone: phoneNumber,
                         email,
                         photo

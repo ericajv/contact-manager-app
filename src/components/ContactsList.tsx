@@ -40,10 +40,10 @@ export default function ContactsList({ search }: ContactsListProps) {
                         <ContactItem
                             id={contact.id}
                             name={contact.name}
-                            reference={''}
                             phoneNumber={contact.phone}
                             email={contact.email}
                             photo={contact.photo ?? ''}
+                            reference={contact.reference}
                             key={contact.id}
                         />
                     ))}

@@ -26,7 +26,6 @@ export default function ContactModal({ contact: contactProps, contactId, closeMo
         await saveContact(contact, id);
         closeModalFn();
     }
-
     const { mutate } = useMutation({
         mutationFn: async ({ contact, closeModalFn, id }: HandleSaveParams) =>
             await handleSave({ contact, closeModalFn, id }),
@@ -51,20 +50,13 @@ export default function ContactModal({ contact: contactProps, contactId, closeMo
                 <div className="h-[1px] w-full bg-[#303030] opacity-20 mb-1"></div>
 
                 <div className="p-4 flex flex-col space-y-4">
-                    <Photo url={contact?.photo} />
+                    <Photo url={contact?.photo} onChange={value => setContact({ ...contact, photo: value })} />
 
-                    <TextInput 
+                    <TextInput
                         label="Nome"
                         placeholder="Nome do contato"
                         value={contact?.name}
                         onChange={value => setContact({ ...contact, name: value })}
-                    />
-
-                    <TextInput 
-                        label="Foto"
-                        placeholder="Url da foto do contato"
-                        value={contact?.photo}
-                        onChange={value => setContact({ ...contact, photo: value })}
                     />
 
                     <TextInput
@@ -77,12 +69,13 @@ export default function ContactModal({ contact: contactProps, contactId, closeMo
                     <TextInput
                         label="Referência"
                         placeholder="Referência do contato"
-                        // value={contact?.reference}
+                        value={contact?.reference}
+                        onChange={value => setContact({ ...contact, reference: value })}
                     />
 
-                    <TextInput 
+                    <TextInput
                         label="E-mail"
-                        placeholder="Email do contato" 
+                        placeholder="Email do contato"
                         value={contact?.email}
                         onChange={value => setContact({ ...contact, email: value })}
                     />
@@ -111,7 +104,8 @@ export default function ContactModal({ contact: contactProps, contactId, closeMo
                                     name: contact?.name ?? '',
                                     email: contact?.email ?? '',
                                     phone: contact?.phone ?? '',
-                                    photo: contact?.photo ?? ''
+                                    photo: contact?.photo ?? '',
+                                    reference: contact?.reference ?? '',
                                 },
                                 closeModalFn,
                                 id: contactId

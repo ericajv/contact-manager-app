@@ -7,8 +7,14 @@ export type Contact = {
     email: string;
     phone: string;
     photo?: string;
-    // reference: string;
+    reference: string;
 };
+
+export type UploadResponse = {
+    filename: string;
+    path: string;
+    uploadedBy: string;
+}
 
 export type GetContactsRequest = { search?: string };
 export type GetContactsResponse = { contacts: Contact[] };
@@ -47,6 +53,27 @@ export async function saveContact(contact: SaveContactsRequest, id?: string): Pr
 export async function deleteContact(id: string): Promise<void> {
     try {
         await api.delete(`/contacts/${id}`);
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            throw new Error(error.response?.data?.message);
+        }
+
+        throw error;
+    }
+}
+
+export async function uploadPhoto(file: File): Promise<UploadResponse> {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const { data } = await api.post<UploadResponse>(
+            '/upload',
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+
+        return data;
     } catch (error) {
         if (error instanceof AxiosError) {
             throw new Error(error.response?.data?.message);

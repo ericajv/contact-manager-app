@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Modal from './common/Modal';
 import ContactModal from './ContactModal';
 
@@ -9,10 +9,25 @@ type NavbarProps = {
 
 export default function Navbar({ search, setSearch }: NavbarProps) {
     const [isModalOpen, setModalOpen] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleChangeSearch = (value: string) => {
         const filteredValue = value.replace(/[^A-Za-z\s]/g, '');
         setSearch(filteredValue);
+    };
+
+    const handleMouseEnter = () => {
+        timerRef.current = setTimeout(() => {
+            setShowTooltip(true);
+        }, 7000);
+    };
+
+    const handleMouseLeave = () => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+        setShowTooltip(false);
     };
 
     return (
@@ -24,7 +39,7 @@ export default function Navbar({ search, setSearch }: NavbarProps) {
                         <span className="material-symbols-outlined text-[16px] text-[#777777] mr-[4px]">
                             search
                         </span>
-                        <input 
+                        <input
                             type="text"
                             className="text-[14px] text-white w-full outline-none"
                             placeholder='Pesquisar'
@@ -36,6 +51,8 @@ export default function Navbar({ search, setSearch }: NavbarProps) {
                 <button
                     className="h-[46px] bg-[#303030] rounded-[12px] flex items-center px-[12px] py-[12px] transition-colors hover:bg-[#3a3a3a]"
                     onClick={() => setModalOpen(true)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                 >
                     <span className="material-symbols-outlined text-[16px] text-white mr-[4px]">
                         add
@@ -43,6 +60,12 @@ export default function Navbar({ search, setSearch }: NavbarProps) {
                     <span className="text-[14px] font-semibold text-white">Adicionar contato</span>
                 </button>
             </div>
+
+            {showTooltip && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 bg-white text-black text-sm px-3 py-1 rounded whitespace-nowrap shadow-lg">
+                    Tá esperando o quê? Boraa moeer!! 🚀
+                </div>
+            )}
 
             <Modal isOpen={isModalOpen} onClose={() => setModalOpen(true)}>
                 <ContactModal closeModalFn={() => setModalOpen(false)} />
