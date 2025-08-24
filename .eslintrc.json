@@ -1,0 +1,27 @@
+{
+    "extends": [
+        "@rocketseat/eslint-config/node"
+    ],
+    "rules": {
+        "indent": "off",
+        "comma-dangle": "error",
+        "no-multi-spaces": "error",
+        "no-trailing-spaces": "error",
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-useless-constructor": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                "printWidth": 100,
+                "tabWidth": 4,
+                "singleQuote": true,
+                "trailingComma": "none",
+                "arrowParens": "avoid",
+                "semi": true
+            }
+        ]
+    }
+}
