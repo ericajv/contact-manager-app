@@ -1,27 +1,22 @@
+import { useQuery } from '@tanstack/react-query';
 import ContactItem from './ContactItem';
+import { getContacts } from '@/api/contacts';
 
-export default function ContactsList() {
-    const contacts = [
-        {
-            name: 'Carmen Lúcia',
-            reference: 'Trabalho',
-            phoneNumber: '(16) 3537-7333',
-            email: 'carmen.lucia@example.com',
-            photo: 'https://images.unsplash.com/photo-1653549549472-45bd72dcf13b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxjYXJtZW4lMjBsJUMzJUJBY2lhfGVufDB8fHx8MTc1NTk3MTgzOXww&ixlib=rb-4.1.0&q=80&w=1080'
-        },
-        {
-            name: 'Cristina Silveira',
-            reference: 'Colega',
-            phoneNumber: '(19) 2337-5664',
-            email: 'cristinasilveira98@example.com',
-            photo: 'https://images.unsplash.com/photo-1605141450911-71256810c12a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxjcmlzdGluYSUyMHNpbHZlaXJhfGVufDB8fHx8MTc1NTk3MTg0MHww&ixlib=rb-4.1.0&q=80&w=1080'
-        }
-    ];
+type ContactsListProps = {
+    search?: string;
+};
+
+export default function ContactsList({ search }: ContactsListProps) {
+    const { data, isFetching } = useQuery({
+        queryKey: ['contacts-list'],
+        queryFn: () => getContacts({ search }),
+        refetchOnWindowFocus: false
+    });
 
     return (
         <div className="flex-1 flex flex-col">
             <div className="mb-[20px]">
-                <span className="text-[14px] font-bold text-white">C</span>
+                <span className="text-[14px] font-bold text-white">{search ?? 'C'}</span>
                 <div className="h-[1px] bg-white opacity-20 mt-[20px]"></div>
             </div>
 
@@ -38,18 +33,20 @@ export default function ContactsList() {
                     </span>
                 </div>
 
-                <div className="flex flex-col">
-                    {contacts.map((contact, idx) => (
+                {isFetching && <div className="p-4 text-center text-gray-500">Loading...</div>}
+
+                {!isFetching && <div className="flex flex-col">
+                    {data?.contacts.map((contact, idx) => (
                         <ContactItem
                             name={contact.name}
-                            reference={contact.reference}
-                            phoneNumber={contact.phoneNumber}
+                            reference={''}
+                            phoneNumber={contact.phone}
                             email={contact.email}
-                            photo={contact.photo}
+                            photo={contact.photo ?? ''}
                             key={idx}
                         />
                     ))}
-                </div>
+                </div>}
             </div>
         </div>
     );

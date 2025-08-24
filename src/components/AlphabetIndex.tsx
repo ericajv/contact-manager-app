@@ -1,4 +1,8 @@
-export default function AlphabetIndex() {
+type AlphabetIndexProps = {
+    setLetter: (letter: string) => void;
+};
+
+export default function AlphabetIndex({ setLetter }: AlphabetIndexProps) {
     const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
     return (
@@ -19,6 +23,7 @@ export default function AlphabetIndex() {
                                     });
                                 }
                             }
+                            setLetter(letter);
                         }}
                     >
                         {letter}

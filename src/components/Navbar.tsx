@@ -2,19 +2,35 @@ import { useState } from 'react';
 import Modal from './common/Modal';
 import ContactModal from './ContactModal';
 
-export default function Navbar() {
+type NavbarProps = {
+    search: string;
+    setSearch: (search: string) => void;
+};
+
+export default function Navbar({ search, setSearch }: NavbarProps) {
     const [isModalOpen, setModalOpen] = useState(false);
+
+    const handleChangeSearch = (value: string) => {
+        const filteredValue = value.replace(/[^A-Za-z\s]/g, '');
+        setSearch(filteredValue);
+    };
 
     return (
         <div className="flex items-center justify-between">
             <h1 className="text-[24px] font-bold text-white">Lista de contatos</h1>
             <div className="flex items-center space-x-[10px]">
                 <div className="relative">
-                    <div className="h-[39px] bg-[#1b1b1b] border border-[#303030] rounded-[8px] flex items-center px-[12px] py-[12px]">
+                    <div className="h-[39px] w-[400px] bg-[#1b1b1b] border border-[#303030] rounded-[8px] flex items-center px-[12px] py-[12px]">
                         <span className="material-symbols-outlined text-[16px] text-[#777777] mr-[4px]">
                             search
                         </span>
-                        <span className="text-[12px] text-[#777777]">Pesquisar</span>
+                        <input 
+                            type="text"
+                            className="text-[14px] text-white w-full outline-none"
+                            placeholder='Pesquisar'
+                            value={search}
+                            onChange={(e) => handleChangeSearch(e.target.value)}
+                        />
                     </div>
                 </div>
                 <button
