@@ -1,3 +1,5 @@
+import tailwindScrollbar from 'tailwind-scrollbar';
+
 module.exports = {
     content: ['./src/**/*.{html,js}'],
     theme: {
@@ -131,6 +133,6 @@ module.exports = {
             3.5: '14px'
         }
     },
-    plugins: [],
-    important: '#webcrumbs'
+    plugins: [tailwindScrollbar({ nocompatible: true })],
+    important: true
 };
